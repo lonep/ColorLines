@@ -10,8 +10,16 @@ GameDesk::GameDesk(QObject *parent)
 
         for (int j = 0; j < DESK_SIZE; j++)
         {
-           GameCell *cell = new GameCell();
-           row.push_back(cell);
+           if (j == 1)
+           {
+               GameCell *cell = new GameCell(Colors::yellow);
+               row.push_back(cell);
+           }
+           else
+           {
+               GameCell *cell = new GameCell();
+               row.push_back(cell);
+           }
         }
 
         gameDesk.push_back(row);
@@ -66,6 +74,12 @@ QVariant GameDesk::data(const QModelIndex &index, int role) const
             return QVariant();
 }
 
+void GameDesk::clearData(const QModelIndex &index, int role)
+{
+    if (index.isValid())
+        setData(index, Colors::none);
+}
+
 bool GameDesk::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (index.row() >= rowCount() || index.column() >= columnCount()) {
@@ -103,7 +117,77 @@ QVector<QModelIndex> GameDesk::getEmptyCells()
 
 QVector<QModelIndex> GameDesk::findWinRow()
 {
+    int counter = 0;
+    int currentColor = 0;
 
+    QVector<QModelIndex> result;
+
+    for (int i = 0; i < DESK_SIZE; i++) //Find win row by horizonal
+    {
+        for (int j = 0; j < DESK_SIZE; j++)
+        {
+            if (gameDesk[i][j]->getBall() == Colors::none)
+            {
+                currentColor = Colors::none;
+                counter = 0;
+                continue;
+            }
+
+            if (!(currentColor == gameDesk[i][j]->getBall()))
+            {
+                currentColor = gameDesk[i][j]->getBall();
+                counter = 1;
+            }
+            else counter++;
+
+            if (counter == WIN_NUMBER_IN_ROW)
+            {
+                for (int k = j; k >= 0; k--)
+                    result.push_back(index(i, k));
+                counter = 0;
+            }
+        }
+    }
+
+    for (int j = 0; j < DESK_SIZE; j++) //Find win row by vertical
+    {
+        for (int i = 0; i < DESK_SIZE; i++)
+        {
+            if (gameDesk[i][j]->getBall() == Colors::none)
+            {
+
+                currentColor = Colors::none;
+                counter = 0;
+                continue;
+            }
+
+            if (!(currentColor == gameDesk[i][j]->getBall()))
+            {
+                currentColor = gameDesk[i][j]->getBall();
+                counter = 1;
+            }
+            else counter++;
+
+            if (counter == WIN_NUMBER_IN_ROW)
+            {
+                for (int k = i; k >= 0; k--)
+                    result.push_back(index(k, j));
+                counter = 0;
+            }
+        }
+    }
+
+
+
+    return result;
+}
+
+void GameDesk::clearCells(const QVector<QModelIndex> &cells)
+{
+    foreach (auto it, cells)
+    {
+        clearData(it);
+    }
 }
 
 int GameDesk::makeSomething()

@@ -26,6 +26,7 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    void clearData(const QModelIndex &index, int role = Qt::DisplayRole);
 
     // Editable:
     bool setData(const QModelIndex &index, const QVariant &value,
@@ -34,8 +35,10 @@ public:
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
     virtual QVector <QModelIndex> getEmptyCells();
-
     virtual QVector <QModelIndex> findWinRow();
+    virtual void clearCells(const QVector <QModelIndex> &cells);
+
+
 
     int makeSomething();
 

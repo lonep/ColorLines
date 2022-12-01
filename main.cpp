@@ -22,5 +22,7 @@ int main(int argc, char *argv[])
 
     GameDesk desk;
 
+    qDebug() << desk.findWinRow().size();
+
     return app.exec();
 }
