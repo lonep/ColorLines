@@ -33,7 +33,7 @@ public:
 
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-    virtual QVector <QPair<int,int>> getEmptyCells();
+    virtual QVector <QModelIndex> getEmptyCells();
 
     virtual QVector <QModelIndex> findWinRow();
 

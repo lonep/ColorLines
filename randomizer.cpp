@@ -25,9 +25,9 @@ QVector<Colors> Randomizer::randomColors(int colorAmount)
     return result;
 }
 
-QVector<QPair<int, int>> Randomizer::chooseRandomCells(QVector<QPair<int, int>> emptyCellsCoordinates, int cellsAmount)
+QVector<QModelIndex> Randomizer::chooseRandomCells(QVector<QModelIndex> emptyCellsCoordinates, int cellsAmount)
 {
-    QVector<QPair<int, int>> result;
+    QVector<QModelIndex> result;
 
     int emptyCellIndex;
 

@@ -86,16 +86,16 @@ Qt::ItemFlags GameDesk::flags(const QModelIndex &index) const
     return QAbstractItemModel::flags(index) | Qt::ItemIsEditable; // FIXME: Implement me!
 }
 
-QVector<QPair<int, int> > GameDesk::getEmptyCells()
+QVector<QModelIndex> GameDesk::getEmptyCells()
 {
-    QVector<QPair<int, int>> result;
+    QVector<QModelIndex> result;
 
     for (int i = 0; i < deskSize; i++)
     {
         for (int j = 0; j < deskSize; j++)
         {
             if (gameDesk[i][j]->getBall() == Colors::none)
-                result.push_back(QPair<int, int>(i, j));
+                result.push_back(index(i, j));
         }
     }
     return result;
