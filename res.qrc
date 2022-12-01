@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>res/icons/Button.png</file>
+        <file>res/icons/Button_pressed.png</file>
+    </qresource>
+    <qresource prefix="/fonts">
+        <file>res/fonts/PressStart2P-Regular.ttf</file>
+    </qresource>
+</RCC>
