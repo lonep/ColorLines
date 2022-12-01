@@ -42,7 +42,8 @@ public:
 private:
     QVector <QVector<GameCell*>> gameDesk;
 
-    const int deskSize = 9;
+    const int DESK_SIZE = 9;
+    const int WIN_NUMBER_IN_ROW = 5;
 };
 
 #endif // GAMEDESK_H

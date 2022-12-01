@@ -4,11 +4,11 @@
 GameDesk::GameDesk(QObject *parent)
     : QAbstractItemModel(parent)
 {
-    for (int i = 0; i < deskSize; i++)
+    for (int i = 0; i < DESK_SIZE; i++)
     {
         QVector <GameCell*> row;
 
-        for (int j = 0; j < deskSize; j++)
+        for (int j = 0; j < DESK_SIZE; j++)
         {
            GameCell *cell = new GameCell();
            row.push_back(cell);
@@ -90,9 +90,9 @@ QVector<QModelIndex> GameDesk::getEmptyCells()
 {
     QVector<QModelIndex> result;
 
-    for (int i = 0; i < deskSize; i++)
+    for (int i = 0; i < DESK_SIZE; i++)
     {
-        for (int j = 0; j < deskSize; j++)
+        for (int j = 0; j < DESK_SIZE; j++)
         {
             if (gameDesk[i][j]->getBall() == Colors::none)
                 result.push_back(index(i, j));
