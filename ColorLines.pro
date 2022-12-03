@@ -1,5 +1,6 @@
 QT += quick
 QT += sql
+
 SOURCES += \
         dbmanager.cpp \
         gamecell.cpp \

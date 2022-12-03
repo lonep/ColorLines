@@ -4,40 +4,26 @@
 GameDesk::GameDesk(QObject *parent)
     : QAbstractItemModel(parent)
 {
-    for (int i = 0; i < DESK_SIZE; i++)// TODO fix constructor
+    for (int i = 0; i < DESK_SIZE * DESK_SIZE; i++)// TODO fix constructor
     {
-        QVector <GameCell*> row;
+       if (i >= 0 && i < 9)
+           gameDesk.push_back(new GameCell(Colors::green));
+               else if(i >= 9 && i < 18) gameDesk.push_back(new GameCell(Colors::yellow));
+               else gameDesk.push_back(new GameCell(Colors::none));
 
-        for (int j = 0; j < DESK_SIZE; j++)
-        {
-           if (i == 1)
-           {
-               GameCell *cell = new GameCell(Colors::yellow);
-               row.push_back(cell);
-           }
-           else
-           {
-               GameCell *cell = new GameCell();
-               row.push_back(cell);
-           }
-        }
-
-        gameDesk.push_back(row);
     }
 }
 
 GameDesk::~GameDesk()
 {
-    foreach (auto it, gameDesk) {
-        it.clear();
-    }
+    gameDesk.clear();
 }
 
 
 QModelIndex GameDesk::index(int row, int column, const QModelIndex &parent) const
 {
     qDebug() << "index Row - " << row << "index column - " << column;
-    return createIndex(row, column, gameDesk[row][column]);
+    return createIndex(row, 0, gameDesk[row]);
 }
 
 QHash<int, QByteArray> GameDesk::roleNames() const
@@ -61,7 +47,7 @@ int GameDesk::rowCount(const QModelIndex &parent) const
 //    return DESK_SIZE;
 //    Q_UNUSED(parent);
 
-    return DESK_SIZE;
+    return DESK_SIZE * DESK_SIZE;
 }
 
 int GameDesk::columnCount(const QModelIndex &parent) const
@@ -76,21 +62,21 @@ QVariant GameDesk::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (index.row() > rowCount() || index.column() > columnCount())
-            return QVariant();
+//    if (index.row() > rowCount() || index.column() > columnCount())
+//            return QVariant();
 
         if (role == Roles::BallRole)
         {
-            qDebug() << gameDesk[index.row()][index.column()]->getBall() << " - " << QVariant(gameDesk[index.row()][index.column()]->getBall());
+            qDebug() << gameDesk[index.row()]->getBall() << " - " << QVariant(gameDesk[index.row()]->getBall());
             qDebug() << "Row - " << index.row() << " COloumt - " << index.column();
-            return QVariant(gameDesk[index.row()][index.column()]->getBall());
+            return QVariant(gameDesk[index.row()]->getBall());
         }
 
         if (role == Roles::second)
         {
-            qDebug() << gameDesk[index.row()][index.column()]->getBall() << " - " << QVariant(gameDesk[index.row()][index.column()]->getBall());
+            qDebug() << gameDesk[index.row()]->getBall() << " - " << QVariant(gameDesk[index.row()]->getBall());
             qDebug() << "Row - " << index.row() << " COloumt - " << index.column();
-            return QVariant(gameDesk[index.row()][index.column()]->getBall());
+            return QVariant(gameDesk[index.row()]->getBall());
         }
         else
             return QVariant();
@@ -104,14 +90,17 @@ void GameDesk::clearData(const QModelIndex &index, int role)
 
 bool GameDesk::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (index.row() >= rowCount() || index.column() >= columnCount()) {
 
-        gameDesk[index.row()][index.column()]->setBall(value.toInt());
+    if (role == Roles::BallRole)
+    {
+        gameDesk[index.row()]->setBall(value.toInt());
 
         emit dataChanged(index, index, {role});
+        qDebug() << "new value - " << value;
         return true;
     }
     return false;
+
 }
 
 Qt::ItemFlags GameDesk::flags(const QModelIndex &index) const
@@ -130,8 +119,8 @@ QVector<QModelIndex> GameDesk::getEmptyCells()
     {
         for (int j = 0; j < DESK_SIZE; j++)
         {
-            if (gameDesk[i][j]->getBall() == Colors::none)
-                result.push_back(index(i, j));
+//            if (gameDesk[i][j]->getBall() == Colors::none)
+//                result.push_back(index(i, j));
         }
     }
     return result;
@@ -148,19 +137,19 @@ QVector<QModelIndex> GameDesk::findWinRow()
     {
         for (int j = 0; j < DESK_SIZE; j++)
         {
-            if (gameDesk[i][j]->getBall() == Colors::none)
-            {
-                currentColor = Colors::none;
-                counter = 0;
-                continue;
-            }
+//            if (gameDesk[i][j]->getBall() == Colors::none)
+//            {
+//                currentColor = Colors::none;
+//                counter = 0;
+//                continue;
+//            }
 
-            if (!(currentColor == gameDesk[i][j]->getBall()))
-            {
-                currentColor = gameDesk[i][j]->getBall();
-                counter = 1;
-            }
-            else counter++;
+//            if (!(currentColor == gameDesk[i][j]->getBall()))
+//            {
+//                currentColor = gameDesk[i][j]->getBall();
+//                counter = 1;
+//            }
+//            else counter++;
 
             if (counter == WIN_NUMBER_IN_ROW)
             {
@@ -175,20 +164,20 @@ QVector<QModelIndex> GameDesk::findWinRow()
     {
         for (int i = 0; i < DESK_SIZE; i++)
         {
-            if (gameDesk[i][j]->getBall() == Colors::none)
-            {
+//            if (gameDesk[i][j]->getBall() == Colors::none)
+//            {
 
-                currentColor = Colors::none;
-                counter = 0;
-                continue;
-            }
+//                currentColor = Colors::none;
+//                counter = 0;
+//                continue;
+//            }
 
-            if (!(currentColor == gameDesk[i][j]->getBall()))
-            {
-                currentColor = gameDesk[i][j]->getBall();
-                counter = 1;
-            }
-            else counter++;
+//            if (!(currentColor == gameDesk[i][j]->getBall()))
+//            {
+//                currentColor = gameDesk[i][j]->getBall();
+//                counter = 1;
+//            }
+//            else counter++;
 
             if (counter == WIN_NUMBER_IN_ROW)
             {
@@ -210,6 +199,11 @@ void GameDesk::clearCells(const QVector<QModelIndex> &cells)
     {
         clearData(it);
     }
+}
+
+void GameDesk::init()
+{
+
 }
 
 QVector<QModelIndex> GameDesk::getAllModelIndexes()

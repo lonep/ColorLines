@@ -46,6 +46,7 @@ public:
     virtual QVector <QModelIndex> getEmptyCells();
     virtual QVector <QModelIndex> findWinRow();
     virtual void clearCells(const QVector <QModelIndex> &cells);
+    virtual void init();
 
     QVector<QModelIndex> getAllModelIndexes();
 
@@ -53,7 +54,7 @@ public:
     Q_INVOKABLE int makeSomething();
 
 private:
-    QVector <QVector<GameCell*>> gameDesk; //TODO заменить на итемы
+    QVector <GameCell*> gameDesk; //TODO заменить на итемы
 
     const int DESK_SIZE = 9;
     const int WIN_NUMBER_IN_ROW = 5;
