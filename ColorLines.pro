@@ -1,6 +1,7 @@
 QT += quick
-
+QT += sql
 SOURCES += \
+        dbmanager.cpp \
         gamecell.cpp \
         gamedesk.cpp \
         main.cpp \
@@ -24,6 +25,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     Colors.h \
+    dbmanager.h \
     gamecell.h \
     gamedesk.h \
     randomizer.h
+
+DISTFILES +=

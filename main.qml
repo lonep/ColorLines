@@ -2,6 +2,8 @@ import QtQuick 2.0
 import QtQuick.Layouts
 import QtQuick.Controls
 
+import GameDesk 1.0
+
 Window {
     id: window;
 
@@ -10,6 +12,25 @@ Window {
     visible: true
     title: qsTr("Color lines")
 
+    ListModel {
+    id: newModel
+        ListElement {
+            name: "Jim Williams"
+            portrait: "pics/portrait.png"
+        }
+        ListElement {
+            name: "John Brown"
+            portrait: "pics/portrait.png"
+        }
+        ListElement {
+            name: "Bill Smyth"
+            portrait: "pics/portrait.png"
+        }
+        ListElement {
+            name: "Sam Wise"
+            portrait: "pics/portrait.png"
+        }
+    }
 
     ColumnLayout
     {
@@ -179,24 +200,47 @@ Window {
                 Layout.preferredHeight: parent.height / 7;
             }
         }
-        Grid
-        {
-            columns: 9
-            Layout.fillHeight: true;
-            Layout.fillWidth: true;
 
-            Repeater {
-                anchors.fill: parent
-                    model: 81
-                    Rectangle {
-                        width: parent.width / 9
-                        height: parent.height / 9
-                        border.width: 1
-                        border.color: "white"
-                        color: "grey"
-                    }
+
+
+
+        GridView {
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            cellHeight: height/9
+            cellWidth: width/9
+
+//            model: myModel
+//            model: myModel
+            model: GameDeskModel {}
+            delegate: Rectangle {
+//                required property string modelData
+                border.color: "yellow"
+                border.width: 1
+                height: parent.height
+                width: parent.width
+
+
+                color: "black";
+
+
+                Text {
+                    anchors.fill: parent
+                    text: model.ball
+                    color: "red"
+                }
+
+                Text {
+                    anchors.fill: parent
+                    text:model.second
+                    color: "pink"
+                }
             }
         }
+
+
+
+
     }
 
 

@@ -6,4 +6,7 @@
     <qresource prefix="/fonts">
         <file>res/fonts/PressStart2P-Regular.ttf</file>
     </qresource>
+    <qresource prefix="/">
+        <file>main.qml</file>
+    </qresource>
 </RCC>

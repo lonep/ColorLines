@@ -7,6 +7,11 @@ GameCell::GameCell(Colors type)
     ballType = type;
 }
 
+GameCell::GameCell(int value)
+{
+    ballType = value;
+}
+
 int GameCell::getBall() const
 {
     return ballType;

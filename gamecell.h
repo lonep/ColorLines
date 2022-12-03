@@ -9,7 +9,9 @@ class GameCell
 public:
 
 
-    GameCell(Colors type = Colors::none);
+    GameCell(Colors type = Colors::none); //Q_Property
+    GameCell(int value);
+
 
     int getBall() const;
     void setBall(Colors type);
