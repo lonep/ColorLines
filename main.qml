@@ -213,12 +213,12 @@ Window {
                     x:  (desk.cellWidth - width)/2
                     y:  (desk.cellHeight - height)/2
 
-                    NumberAnimation on opacity {
-                        id: escapeAnimation
-                        to: 0
-                        duration: 1000
-                        running: false
-                    }
+//                    NumberAnimation on opacity {
+//                        id: escapeAnimation
+//                        to: 0
+//                        duration: 1000
+//                        running: false
+//                    }
 
                     Image {
                         id: circle
