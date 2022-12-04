@@ -11,9 +11,14 @@ public:
 
     virtual void addStartCondition() = 0;
 
+    virtual void newGame() = 0;
+    virtual void gameMove() = 0;
+
 //    GameMoveData - данные, которые неизменны и добавл€ютс€ на каждом шаге игры
     virtual void addGameMoveData() = 0;
+
     virtual QModelIndexList findWinCombination() = 0;
+    virtual void cleanGameDesk() = 0;
 
     //¬заимодействие с данными
     virtual void setGameModel(QAbstractItemModel *model);

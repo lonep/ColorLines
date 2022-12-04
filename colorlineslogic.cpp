@@ -43,6 +43,8 @@ void ColorLinesLogic::addGameMoveData()
     {
         gameModel->setData(it, Randomizer::randomColor(), GameDesk::Roles::BallRole);
     }
+
+    qDebug() << "---------------Added new three balls-------------";
 }
 
 QModelIndexList ColorLinesLogic::findWinCombination()
@@ -124,6 +126,29 @@ QModelIndexList ColorLinesLogic::findWinCombination()
 
 
     return result;
+
+}
+
+void ColorLinesLogic::newGame()
+{
+    cleanGameDesk();
+    addStartCondition();
+    //ToDo clean total score;
+}
+
+void ColorLinesLogic::gameMove()
+{
+    addGameMoveData();
+}
+
+void ColorLinesLogic::cleanGameDesk()
+{
+    QModelIndexList data = gameModel->getAllModelIndexes();
+
+    foreach(auto it, data)
+    {
+        gameModel->setData(it, Colors::none, GameDesk::Roles::BallRole);
+    }
 
 }
 

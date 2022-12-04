@@ -10,10 +10,14 @@ public:
     ColorLinesLogic(QAbstractItemModel *modelPtr = nullptr, int deskColumnAmount = 0, int winCombination = 0);
 
     //Игровая логика
-   Q_INVOKABLE virtual void addStartCondition() override;
-   Q_INVOKABLE virtual void addGameMoveData() override;
+   virtual void addStartCondition() override;
+   virtual void addGameMoveData() override;
    virtual QModelIndexList findWinCombination() override;
 
+    Q_INVOKABLE virtual void newGame() override;
+    Q_INVOKABLE virtual void gameMove() override;
+
+    virtual void cleanGameDesk() override;
 };
 
 #endif // COLORLINESLOGIC_H

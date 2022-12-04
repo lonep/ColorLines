@@ -53,10 +53,7 @@ Window {
                 }
 
                 onPressed: {
-
-
-                    newGame()
-
+                   gameLogic.newGame()
                 }
 
                 Layout.minimumHeight: 50
@@ -90,37 +87,45 @@ Window {
                 }
 
             }
-            RowLayout
-            {
-                Layout.fillWidth: true;
-                Layout.minimumHeight: 50
-                Layout.minimumWidth: 50
-                Layout.preferredHeight: parent.height / 5;
+//            ListView //TODO шары следующего хода
+//            {
+//                id: nexBalls
+//                orientation: ListView.Horizontal
+//                Layout.fillWidth: true;
+//                Layout.minimumHeight: 50
+//                Layout.minimumWidth: 50
+//                Layout.preferredHeight: parent.height / 5;
 
-                Rectangle
-                {
-                    color: "red";
-                    Layout.preferredHeight: parent.height / 3;
-                    Layout.fillWidth: true;
+//                model: GameDeskModel {}
+//                delegate : Item {
 
-                }
+//                    id: nextBallItem
+//                    height: nextBallItem / 3
+//                    width:  nextBallItem / 3
 
-                Rectangle
-                {
-                    color: "green"
-                    Layout.preferredHeight: parent.height / 3;
-                    Layout.fillWidth: true;
-                }
+////                    Image {
+////                        id: nextCircle
+////                        width: parent.width
+////                        height: parent.height
+////                        anchors.horizontalCenter: desk.horizontalCenter
+////                        source: model.ball !== 0 ? "qrc:/icons/res/icons/circle_empty.png" : ""
+////                        z: 2
 
-                Rectangle
-                {
-                    color: "blue"
-                    Layout.preferredHeight: parent.height / 3;
-                    Layout.fillWidth: true;
 
-                }
+////                    }
 
-            }
+//                    Rectangle {
+//                        id: nextCircleBackground
+//                        width: 10
+//                        height: 10
+//                        anchors.fill: circle
+//                        color: getColor(model.ball)
+//                        radius: 50
+//                        z: 1
+//                    }
+//                }
+
+//            }
             Rectangle
             {
                 color: "black";
@@ -211,7 +216,7 @@ Window {
                         id: circle
                         width: parent.width
                         height: parent.height
-                        anchors.horizontalCenter: desk.horizontalCenter
+
                         source: model.ball !== 0 ? "qrc:/icons/res/icons/circle_empty.png" : ""
                         z: 2
 
@@ -248,29 +253,9 @@ Window {
 
 
             }
-            Connections {
-            target: desk.model   // EDIT: I drew the wrong conclusions here, see text below!
-           onDataChanged: {
-                console.log("-----------------DATA_CHANGED-------------------")
-               desk.model.select()
-
-
-            }
-        }
 
         }
 
-
-
-
-
-
-
-
-
-    function newGame() {
-//        desk.update()
-    }
 
     function checkValue(n)
     {
@@ -300,26 +285,18 @@ Window {
             circleBackground.color = getColor(model.ball)
             circle.source = "qrc:/icons/res/icons/circle_empty.png"
 
-            gameDesk.addStepItems();
-//            desk.modelUpdated()
-            gameDesk.makeEmit();
-
+//            gameLogic.gameMove()
         }
 
+    lastColor = 0
     choose = false
-    }
-
-    function updateDelegate (model, circleBackground, circle)
-    {
-        circleBackground.color = getColor(model.ball)
-        circle.source = model.ball === 0 ? "" : "qrc:/icons/res/icons/circle_empty.png"
     }
 
     function getColor(value)
     {
         console.log(value)
         var color
-
+        console.log("VALUE COLOR", value);
         if (value === 0) return "transparent";
         if (value === 1) return "red";
         if (value === 2) return "orange";

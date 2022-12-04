@@ -1,29 +1,26 @@
 #include "gamedesk.h"
 #include "Colors.h"
-#include "randomizer.h"
 #include "dbmanager.h"
 #include <QDebug>
 
 GameDesk::GameDesk(QObject *parent)
     : QAbstractItemModel(parent)
 {
-    DBmanager db("gameDB.db");
-    QVector<GameCell*> data = db.getData();
-    init();
+    init(81);
 
-//    for (int i = 0 ; i < DESK_SIZE * DESK_SIZE; i++)
-//    {
-//        setData(index(i, 0), data[i]->getBall(), Roles::BallRole);
-//    }
-    addStartItems();
-
+//    »з-за проблемы, описанной в ReadMe здесь пока стоит заглушка,
+//            чтобы можно было хот€ бы подвигать кружочки.
+    {
+    setData(index(3, 0), Colors::green, Roles::BallRole);
+    setData(index(4, 0), Colors::yellow, Roles::BallRole);
+    setData(index(5, 0), Colors::red, Roles::BallRole);
+    setData(index(6, 0), Colors::orange, Roles::BallRole);
+    }
 
 }
 
 GameDesk::~GameDesk()
 {
-    DBmanager db("gameDB.db");
-    db.saveData(getAllModelIndexes());
     gameDesk.clear();
 }
 
@@ -40,7 +37,7 @@ QHash<int, QByteArray> GameDesk::roleNames() const
 {
     QHash<int, QByteArray> roles ;
     roles[Roles::BallRole] = "ball";
-    roles[Roles::second] = "second";
+    roles[Roles::NextBallsRole] = "nextBall";
 
     return roles;
 }
@@ -52,7 +49,7 @@ QModelIndex GameDesk::parent(const QModelIndex &child) const
 
 int GameDesk::rowCount(const QModelIndex &parent) const
 {
-    return DESK_SIZE * DESK_SIZE;
+    return DESK_SIZE;
 }
 
 int GameDesk::columnCount(const QModelIndex &parent) const
@@ -99,17 +96,6 @@ bool GameDesk::setData(const QModelIndex &index, const QVariant &value, int role
 
 }
 
-void GameDesk::addStartItems()
-{
-    updateData(Randomizer::chooseRandomCells(getEmptyCells(), 5), Randomizer::randomColors(5));
-}
-
-void GameDesk::addStepItems()
-{
-    updateData(Randomizer::chooseRandomCells(getEmptyCells(), 3), Randomizer::randomColors(3));
-    qDebug() << "CALL ADDSTEPITEMS";
-}
-
 Qt::ItemFlags GameDesk::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
@@ -118,87 +104,11 @@ Qt::ItemFlags GameDesk::flags(const QModelIndex &index) const
     return QAbstractItemModel::flags(index) | Qt::ItemIsEditable; // FIXME: Implement me!
 }
 
-QVector<QModelIndex> GameDesk::findWinRow()
-{
-    int counter = 0;
-    int currentColor = 0;
-
-    QVector<QModelIndex> result;
-
-    for (int i = 0; i < DESK_SIZE; i++) //Find win row by horizonal
-    {
-        for (int j = 0; j < DESK_SIZE; j++)
-        {
-//            if (gameDesk[i][j]->getBall() == Colors::none)
-//            {
-//                currentColor = Colors::none;
-//                counter = 0;
-//                continue;
-//            }
-
-//            if (!(currentColor == gameDesk[i][j]->getBall()))
-//            {
-//                currentColor = gameDesk[i][j]->getBall();
-//                counter = 1;
-//            }
-//            else counter++;
-
-            if (counter == WIN_NUMBER_IN_ROW)
-            {
-                for (int k = j; k >= 0; k--)
-                    result.push_back(index(i, k));
-                counter = 0;
-            }
-        }
-    }
-
-    for (int j = 0; j < DESK_SIZE; j++) //Find win row by vertical
-    {
-        for (int i = 0; i < DESK_SIZE; i++)
-        {
-//            if (gameDesk[i][j]->getBall() == Colors::none)
-//            {
-
-//                currentColor = Colors::none;
-//                counter = 0;
-//                continue;
-//            }
-
-//            if (!(currentColor == gameDesk[i][j]->getBall()))
-//            {
-//                currentColor = gameDesk[i][j]->getBall();
-//                counter = 1;
-//            }
-//            else counter++;
-
-            if (counter == WIN_NUMBER_IN_ROW)
-            {
-                for (int k = i; k >= 0; k--)
-                    result.push_back(index(k, j));
-                counter = 0;
-            }
-        }
-    }
-
-
-
-    return result;
-}
-
 void GameDesk::clearCells(const QVector<QModelIndex> &cells)
 {
     foreach (auto it, cells)
     {
         clearData(it);
-    }
-}
-
-void GameDesk::updateData(const QVector<QModelIndex> &cells, const QVector<Colors> &colors)
-{
-    if (cells.size() == colors.size())
-    {
-        for (int i = 0; i < cells.size(); i++)
-            setData(cells[i], colors[i], Roles::BallRole);
     }
 }
 

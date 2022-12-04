@@ -17,7 +17,7 @@ public:
 
     enum Roles {
         BallRole = Qt::UserRole,
-        second
+        NextBallsRole
     };
 
     // Basic functionality:
@@ -31,8 +31,6 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-
-
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     void clearData(const QModelIndex &index, int role = Qt::DisplayRole);
 
@@ -40,15 +38,9 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value,
                  int role = Qt::EditRole) override;
 
-    Q_INVOKABLE virtual void addStartItems();
-    Q_INVOKABLE virtual void addStepItems();
 
     Qt::ItemFlags flags(const QModelIndex& index) const override;
-
-
-    virtual QVector <QModelIndex> findWinRow();
     virtual void clearCells(const QVector <QModelIndex> &cells);
-    virtual void updateData(const QVector <QModelIndex> &cells, const QVector<Colors> &colors);
 
     QModelIndexList getAllModelIndexes();
 
@@ -61,6 +53,9 @@ private:
 //    По этой причине логичнее было-бы сменить базовый класс на QAbstractListModel,
 //    но я решил оставить класс из ТЗ и работать с column = 0
     QList <GameCell*> gameDesk;
+
+//    В верхней части экрана показываются шары, которые появятся на след. ходе
+    QList <Colors> nextMoveItems;
 
 
     void init(QModelIndexList indexList);
