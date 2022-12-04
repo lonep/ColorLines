@@ -1,27 +1,37 @@
 #include "gamedesk.h"
 #include "Colors.h"
+#include "randomizer.h"
+#include "dbmanager.h"
+#include <QDebug>
 
 GameDesk::GameDesk(QObject *parent)
     : QAbstractItemModel(parent)
 {
-    for (int i = 0; i < DESK_SIZE * DESK_SIZE; i++)// TODO fix constructor
-    {
-       if (i >= 0 && i < 9)
-           gameDesk.push_back(new GameCell(Colors::green));
-               else if(i >= 9 && i < 18) gameDesk.push_back(new GameCell(Colors::yellow));
-               else gameDesk.push_back(new GameCell(Colors::none));
+    DBmanager db("gameDB.db");
+    QVector<GameCell*> data = db.getData();
+    init();
 
-    }
+//    for (int i = 0 ; i < DESK_SIZE * DESK_SIZE; i++)
+//    {
+//        setData(index(i, 0), data[i]->getBall(), Roles::BallRole);
+//    }
+    addStartItems();
+
+
 }
 
 GameDesk::~GameDesk()
 {
+    DBmanager db("gameDB.db");
+    db.saveData(getAllModelIndexes());
     gameDesk.clear();
 }
 
 
 QModelIndex GameDesk::index(int row, int column, const QModelIndex &parent) const
 {
+    Q_UNUSED(parent);
+
     qDebug() << "index Row - " << row << "index column - " << column;
     return createIndex(row, 0, gameDesk[row]);
 }
@@ -37,24 +47,18 @@ QHash<int, QByteArray> GameDesk::roleNames() const
 
 QModelIndex GameDesk::parent(const QModelIndex &child) const
 {
-//    return QAbstractItemModel::parent(child);
+    Q_UNUSED(child);
 }
 
 int GameDesk::rowCount(const QModelIndex &parent) const
 {
-//    if (!parent.isValid())
-//        return 9;
-//    return DESK_SIZE;
-//    Q_UNUSED(parent);
-
     return DESK_SIZE * DESK_SIZE;
 }
 
 int GameDesk::columnCount(const QModelIndex &parent) const
 {
-//    if (!parent.isValid())
-//        return 9;
-    return DESK_SIZE;
+    Q_UNUSED(parent);
+    return 0;
 }
 
 QVariant GameDesk::data(const QModelIndex &index, int role) const
@@ -65,21 +69,13 @@ QVariant GameDesk::data(const QModelIndex &index, int role) const
 //    if (index.row() > rowCount() || index.column() > columnCount())
 //            return QVariant();
 
-        if (role == Roles::BallRole)
-        {
-            qDebug() << gameDesk[index.row()]->getBall() << " - " << QVariant(gameDesk[index.row()]->getBall());
-            qDebug() << "Row - " << index.row() << " COloumt - " << index.column();
-            return QVariant(gameDesk[index.row()]->getBall());
-        }
-
-        if (role == Roles::second)
-        {
-            qDebug() << gameDesk[index.row()]->getBall() << " - " << QVariant(gameDesk[index.row()]->getBall());
-            qDebug() << "Row - " << index.row() << " COloumt - " << index.column();
-            return QVariant(gameDesk[index.row()]->getBall());
-        }
-        else
-            return QVariant();
+    if (role == Roles::BallRole)
+    {
+        qDebug() << gameDesk[index.row()]->getBall() << " - " << QVariant(gameDesk[index.row()]->getBall());
+        qDebug() << "Row - " << index.row() << " COloumt - " << index.column();
+        return QVariant(gameDesk[index.row()]->getBall());
+    }
+     else   return QVariant();
 }
 
 void GameDesk::clearData(const QModelIndex &index, int role)
@@ -95,12 +91,23 @@ bool GameDesk::setData(const QModelIndex &index, const QVariant &value, int role
     {
         gameDesk[index.row()]->setBall(value.toInt());
 
-        emit dataChanged(index, index, {role});
+        emit dataChanged(index, index, QList<int>(BallRole));
         qDebug() << "new value - " << value;
         return true;
     }
     return false;
 
+}
+
+void GameDesk::addStartItems()
+{
+    updateData(Randomizer::chooseRandomCells(getEmptyCells(), 5), Randomizer::randomColors(5));
+}
+
+void GameDesk::addStepItems()
+{
+    updateData(Randomizer::chooseRandomCells(getEmptyCells(), 3), Randomizer::randomColors(3));
+    qDebug() << "CALL ADDSTEPITEMS";
 }
 
 Qt::ItemFlags GameDesk::flags(const QModelIndex &index) const
@@ -109,21 +116,6 @@ Qt::ItemFlags GameDesk::flags(const QModelIndex &index) const
         return Qt::NoItemFlags;
 
     return QAbstractItemModel::flags(index) | Qt::ItemIsEditable; // FIXME: Implement me!
-}
-
-QVector<QModelIndex> GameDesk::getEmptyCells()
-{
-    QVector<QModelIndex> result;
-
-    for (int i = 0; i < DESK_SIZE; i++)
-    {
-        for (int j = 0; j < DESK_SIZE; j++)
-        {
-//            if (gameDesk[i][j]->getBall() == Colors::none)
-//                result.push_back(index(i, j));
-        }
-    }
-    return result;
 }
 
 QVector<QModelIndex> GameDesk::findWinRow()
@@ -201,23 +193,45 @@ void GameDesk::clearCells(const QVector<QModelIndex> &cells)
     }
 }
 
-void GameDesk::init()
+void GameDesk::updateData(const QVector<QModelIndex> &cells, const QVector<Colors> &colors)
 {
-
+    if (cells.size() == colors.size())
+    {
+        for (int i = 0; i < cells.size(); i++)
+            setData(cells[i], colors[i], Roles::BallRole);
+    }
 }
 
-QVector<QModelIndex> GameDesk::getAllModelIndexes()
+void GameDesk::init(int deskSize)
 {
-    QVector<QModelIndex> result;
+    DESK_SIZE = deskSize;
 
-    for (int i = 0; i < DESK_SIZE; i++)
-        for (int j = 0; j < DESK_SIZE; j++)
-                result.push_back(index(i, j));
+    for (int i = 0; i < DESK_SIZE; i++)// TODO fix constructor
+        gameDesk.push_back(new GameCell(Colors::none));
+}
+
+void GameDesk::init(const QList<GameCell*> &gameData)
+{
+    gameDesk = gameData;
+}
+
+QModelIndexList GameDesk::getAllModelIndexes()
+{
+    QModelIndexList result;
+
+
+    try {
+        if (DESK_SIZE != 0)
+            for (int i = 0; i < DESK_SIZE; i++)
+                    result.push_back(index(i, 0));
+        else throw (DESK_SIZE);
+    } catch (int size)
+    {
+            qCritical() << "Model not initialized. Actual game desk size: " << size;
+            return result;
+    }
 
     return result;
 }
 
-int GameDesk::makeSomething()
-{
-    return 1;
-}
+

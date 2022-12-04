@@ -32,7 +32,7 @@ void DBmanager::saveData(const QModelIndex &index)
                .arg("gameDesk")
                .arg(index.row())
                .arg(index.column())
-               .arg(index.model()->data(index).toInt()));
+               .arg(index.data(256).toInt()));
 
 //    qDebug() << index.data();
 

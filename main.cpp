@@ -8,6 +8,7 @@
 #include "dbmanager.h"
 #include <QQuickView>
 #include <QQmlContext>
+#include <colorlineslogic.h>
 
 
 int main(int argc, char *argv[])
@@ -15,6 +16,12 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+
+    GameDesk *desk = new GameDesk;
+
+    ColorLinesLogic *gameLogic = new ColorLinesLogic(desk, 9, 5);
+
+    DBmanager db("gameDB.db");
 
     qmlRegisterType<GameDesk>("GameDesk", 1, 0, "GameDeskModel");
 
@@ -25,27 +32,8 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
     engine.load(url);
-
-
-
-    GameDesk desk;
-    DBmanager db("gameDB.db");
-
-
-//   foreach (auto it, db.getData())
-//        qDebug() << it->getBall();
-
-//    qDebug() << desk.findWinRow().size();
-
-   QStringList dataList;
-
-   for (int i = 0 ; i < 81; i++)
-   {
-       dataList.push_back(QString("Item %1").arg(i));
-   }
-
-   engine.rootContext()->setContextProperty("myModel", &desk);
-
+    engine.rootContext()->setContextProperty("gameDesk", desk);
+    engine.rootContext()->setContextProperty("gameLogic", gameLogic);
 
 
     return app.exec();

@@ -2,9 +2,11 @@ QT += quick
 QT += sql
 
 SOURCES += \
+        colorlineslogic.cpp \
         dbmanager.cpp \
         gamecell.cpp \
         gamedesk.cpp \
+        gamelogic.cpp \
         main.cpp \
         randomizer.cpp
 
@@ -26,9 +28,11 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     Colors.h \
+    colorlineslogic.h \
     dbmanager.h \
     gamecell.h \
     gamedesk.h \
+    gamelogic.h \
     randomizer.h
 
 DISTFILES +=

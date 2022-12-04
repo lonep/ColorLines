@@ -18,16 +18,16 @@ Colors Randomizer::randomColor()
 
 QVector<Colors> Randomizer::randomColors(int colorAmount)
 {
-    QVector <Colors> result;
+    QList <Colors> result;
     for (int i = 0; i < colorAmount; i ++)
         result.push_back(Colors(QRandomGenerator::global()->bounded(Colors::none + 1, Colors::LAST)));
 
     return result;
 }
 
-QVector<QModelIndex> Randomizer::chooseRandomCells(QVector<QModelIndex> emptyCellsCoordinates, int cellsAmount)
+QList<QModelIndex> Randomizer::chooseRandomCells(QList<QModelIndex> emptyCellsCoordinates, int cellsAmount)
 {
-    QVector<QModelIndex> result;
+    QList<QModelIndex> result;
 
     int emptyCellIndex;
 

@@ -12,9 +12,9 @@ public:
 
 
     static Colors randomColor();
-    static QVector<Colors> randomColors(int colorAmount);
+    static QList<Colors> randomColors(int colorAmount);
 
-    static QVector<QModelIndex> chooseRandomCells(QVector<QModelIndex> emptyCellsCoordinates, int cellsAmount);
+    static QList<QModelIndex> chooseRandomCells(QList<QModelIndex> emptyCellsCoordinates, int cellsAmount);
 };
 
 #endif // RANDOMIZER_H

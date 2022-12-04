@@ -3,7 +3,6 @@
 
 #include <QAbstractItemModel>
 #include <QVector>
-#include <QPair>
 
 #include "gamecell.h"
 
@@ -41,23 +40,36 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value,
                  int role = Qt::EditRole) override;
 
+    Q_INVOKABLE virtual void addStartItems();
+    Q_INVOKABLE virtual void addStepItems();
+
     Qt::ItemFlags flags(const QModelIndex& index) const override;
 
-    virtual QVector <QModelIndex> getEmptyCells();
+
     virtual QVector <QModelIndex> findWinRow();
     virtual void clearCells(const QVector <QModelIndex> &cells);
-    virtual void init();
+    virtual void updateData(const QVector <QModelIndex> &cells, const QVector<Colors> &colors);
 
-    QVector<QModelIndex> getAllModelIndexes();
+    QModelIndexList getAllModelIndexes();
 
-
-    Q_INVOKABLE int makeSomething();
+    void init(int deskSize = 0);
+    void init(const QList <GameCell*> &gameData);
 
 private:
-    QVector <GameCell*> gameDesk; //TODO заменить на итемы
+//    Ћогично было бы использовать двумерный контейнер, как € с начала и сделал,
+//    но у мен€ не удалось корректно подружить его с GridView, поэтому тут QList.
+//    ѕо этой причине логичнее было-бы сменить базовый класс на QAbstractListModel,
+//    но € решил оставить класс из “« и работать с column = 0
+    QList <GameCell*> gameDesk;
 
-    const int DESK_SIZE = 9;
-    const int WIN_NUMBER_IN_ROW = 5;
+
+    void init(QModelIndexList indexList);
+
+
+    int DESK_SIZE;
+
+
+
 };
 
 #endif // GAMEDESK_H

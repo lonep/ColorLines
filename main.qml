@@ -248,6 +248,15 @@ Window {
 
 
             }
+            Connections {
+            target: desk.model   // EDIT: I drew the wrong conclusions here, see text below!
+           onDataChanged: {
+                console.log("-----------------DATA_CHANGED-------------------")
+               desk.model.select()
+
+
+            }
+        }
 
         }
 
@@ -260,7 +269,7 @@ Window {
 
 
     function newGame() {
-        area.clicked()
+//        desk.update()
     }
 
     function checkValue(n)
@@ -290,9 +299,20 @@ Window {
             model.ball = lastColor
             circleBackground.color = getColor(model.ball)
             circle.source = "qrc:/icons/res/icons/circle_empty.png"
+
+            gameDesk.addStepItems();
+//            desk.modelUpdated()
+            gameDesk.makeEmit();
+
         }
 
     choose = false
+    }
+
+    function updateDelegate (model, circleBackground, circle)
+    {
+        circleBackground.color = getColor(model.ball)
+        circle.source = model.ball === 0 ? "" : "qrc:/icons/res/icons/circle_empty.png"
     }
 
     function getColor(value)
