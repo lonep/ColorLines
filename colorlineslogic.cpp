@@ -8,6 +8,16 @@ ColorLinesLogic::ColorLinesLogic(QAbstractItemModel *modelPtr, int deskColumnAmo
     setWinCombination(winCombination);
 
     setGameDeskColumnCount(deskColumnAmount);
+
+    savesManager = new DBmanager("gameDesk");
+}
+
+ColorLinesLogic::~ColorLinesLogic()
+{
+    savesManager->saveData(gameModel->getAllModelIndexes());
+
+    delete savesManager;
+    delete gameModel;
 }
 
 void ColorLinesLogic::addStartCondition()

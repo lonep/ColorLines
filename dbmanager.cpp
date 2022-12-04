@@ -5,6 +5,8 @@
 #include <QSqlError>
 #include <QCoreApplication>
 
+#define MODEL_ROLE 256
+
 DBmanager::DBmanager()
 {
     db = QSqlDatabase::addDatabase("QSQLITE");
@@ -26,32 +28,24 @@ void DBmanager::saveData(const QModelIndex &index)
 {
     QSqlQuery query;
 
-
-
-    query.exec(QString("INSERT INTO %1 VALUES (%2, %3, %4)")
+    query.exec(QString("INSERT INTO %1 VALUES (%4)")
                .arg("gameDesk")
-               .arg(index.row())
-               .arg(index.column())
-               .arg(index.data(256).toInt()));
-
-//    qDebug() << index.data();
+               .arg(index.row()));
 
 }
 
-void DBmanager::saveData(const QVector<QModelIndex> &indexes)
+void DBmanager::saveData(const QModelIndexList &indexes)
 {
 
     QSqlQuery deleteQuery;
-    deleteQuery.exec(QString("DELETE FROM %1").arg("gameDesk"));
-    qDebug() << deleteQuery.lastError().text();
+    deleteQuery.exec(QString("DELETE FROM %1").arg("gameDesk")); //Данные не обновляются, а перезаписываются.
 
-    for (int i = 0; i < indexes.size(); i++)
-    {
+    for (int i = 0; i < indexes.size(); i++) 
         saveData(indexes[i]);
-    }
+
 }
 
-QVector<GameCell *> DBmanager::getData()
+QList<GameCell *> DBmanager::getData()
 {
     QSqlQuery query;
     QVector<GameCell*> result;
@@ -59,14 +53,10 @@ QVector<GameCell *> DBmanager::getData()
     query.exec(QString("SELECT * FROM %1").arg("gameDesk"));
 
     while (query.next())
-        result.push_back(new GameCell(query.value(2).toInt()));
+        result.push_back(new GameCell(query.value(0).toInt()));
 
     return result;
 
 }
 
-template<class T>
-void DBmanager::saveData(const T data)
-{
 
-}

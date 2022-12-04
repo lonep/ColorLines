@@ -2,9 +2,6 @@
 #include <QQmlApplicationEngine>
 
 #include "gamedesk.h"
-#include "gamecell.h"
-#include "Colors.h"
-#include "randomizer.h"
 #include "dbmanager.h"
 #include <QQuickView>
 #include <QQmlContext>

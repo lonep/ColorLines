@@ -14,15 +14,14 @@ public:
     DBmanager();
     DBmanager(const QString &dbName, const QString &hostName = "", const QString &userName = "", const QString &dbPassword = "");
 
-    template <class T>
-    void saveData(const T data);
-    void saveData(const QModelIndex &index);
-    void saveData(const QVector<QModelIndex> &indexes);
+    void saveData(const QModelIndexList &indexes);
 
-    QVector<GameCell*> getData();
+    QList<GameCell*> getData();
 
 private:
     QSqlDatabase db;
+
+    void saveData(const QModelIndex &index);
 
 };
 

@@ -212,6 +212,14 @@ Window {
                     height: desk.cellHeight - 5
                     x:  (desk.cellWidth - width)/2
                     y:  (desk.cellHeight - height)/2
+
+                    NumberAnimation on opacity {
+                        id: escapeAnimation
+                        to: 0
+                        duration: 1000
+                        running: false
+                    }
+
                     Image {
                         id: circle
                         width: parent.width
@@ -239,27 +247,30 @@ Window {
                         anchors.fill: circle
 
                         onClicked: {
+//                            escapeAnimation.start()
                                 model.ball !== 0 ? chooseBall(model, circleBackground, circle) : setBall(model, circleBackground, circle, mouseX, mouseY)
+
                         }
                     }
 
-
-
-
                 }
 
-
             }
-
 
             }
 
         }
 
 
+
     function checkValue(n)
     {
         console.log(n);
+    }
+
+    function startEscapeAnimation(item)
+    {
+        item.escapeAnimation.start()
     }
 
     function chooseBall(model, circleBackground, circle)
@@ -272,6 +283,7 @@ Window {
 
             circleBackground.color = getColor(model.ball)
             circle.source = ""
+
         }
 
     }
@@ -285,7 +297,6 @@ Window {
             circleBackground.color = getColor(model.ball)
             circle.source = "qrc:/icons/res/icons/circle_empty.png"
 
-//            gameLogic.gameMove()
         }
 
     lastColor = 0
